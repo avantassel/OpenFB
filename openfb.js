@@ -21,26 +21,22 @@ var openFB = (function () {
 
         baseURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + context,
 
-        oauthRedirectURL = baseURL + '/oauthcallback.html',
+        oauthRedirectURL = baseURL + '/www/oauthcallback.html',
 
-        logoutRedirectURL = baseURL + '/logoutcallback.html',
+        logoutRedirectURL = baseURL + '/www/logoutcallback.html',
 
         // Because the OAuth login spans multiple processes, we need to keep the login callback function as a variable
         // inside the module instead of keeping it local within the login function.
         loginCallback,
 
         // Indicates if the app is running inside Cordova
-        runningInCordova,
+        runningInCordova = (window.cordova)?true:false,
 
         // Used in the exit event handler to identify if the login has already been processed elsewhere (in the oauthCallback function)
         loginProcessed;
 
-    console.log(oauthRedirectURL);
-    console.log(logoutRedirectURL);
-
-    document.addEventListener("deviceready", function () {
-        runningInCordova = true;
-    }, false);
+    //console.log(oauthRedirectURL);
+    //console.log(logoutRedirectURL);
 
     /**
      * Initialize the OpenFB module. You must use this function and initialize the module with an appId before you can
@@ -112,13 +108,13 @@ var openFB = (function () {
 
         // Inappbrowser exit handler: Used when running in Cordova only
         function loginWindow_exitHandler() {
-            console.log('exit and remove listeners');
+            //console.log('exit and remove listeners');
             // Handle the situation where the user closes the login window manually before completing the login process
             deferredLogin.reject({error: 'user_cancelled', error_description: 'User cancelled login process', error_reason: "user_cancelled"});
             loginWindow.removeEventListener('loadstop', loginWindow_loadStartHandler);
             loginWindow.removeEventListener('exit', loginWindow_exitHandler);
             loginWindow = null;
-            console.log('done removing listeners');
+            //console.log('done removing listeners');
         }
 
         if (options && options.scope) {
